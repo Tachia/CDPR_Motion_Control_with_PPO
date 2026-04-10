@@ -1,3 +1,78 @@
-# Applications of Proximal Policy Optimization (PPO) for Precise Motion Control and Trajectory Planning of Cable-Driven Parallel Robots (CDPRs) 
+# CDPR Motion Control with PPO
 
-Cable-driven Parallel Robots (CDPRs) is an ongoing area of research that has gained significant attention recently due to its vast applications in different fields such as construction, rehabilitation, etc. The lightweight nature of the CDPR, in addition to its ability to maneuver in a complex environment, has made it attractive. This work is driven by a great need to achieve precision, stability and to maintain positive tension across the multiple cables. Traditional methods such as Proportional-Integral-Derivative (PID) and Model Predictive Control (MPC) are commonly used in CDPR, with limited capability for system accuracy and stability. The Proximal Policy Optimization (PPO) was considered suitable for this work due its stable policy update and the ability to minimize oscillations in the system. The agents are trained in a simulated environment to learn and adapt varying cable lengths to follow trajectories accurately while maintaining positive cable tensions. The results show that the PPO achieves a learning stability of 72.3% with high precision accuracy of 97.5% in tracing the desired trajectories, while still maintaining the positive tension with accuracy between 98.5% to 100% across the multiple cables, with a root mean square error (RMSE) accuracy of 0.07 meters, highlighting a high performance improvements over PID and MPC method.
+A cleaned and structured implementation of **Proximal Policy Optimization (PPO)** for trajectory tracking and motion control of **Cable-Driven Parallel Robots (CDPRs)**.
+
+## Project Goals
+
+- Track desired end-effector trajectories in a CDPR environment.
+- Encourage physically plausible cable behavior (positive tension).
+- Provide a reproducible Python package layout suitable for extension and testing.
+
+## Repository Layout
+
+```text
+.
+├── src/cdpr_ppo/
+│   ├── __init__.py
+│   ├── cli.py            # command-line entrypoint
+│   ├── data.py           # dataset loading and preprocessing
+│   ├── env.py            # Gymnasium environment
+│   ├── model.py          # actor-critic model and PPO wrapper
+│   └── trainer.py        # training loop + plots
+├── tests/
+│   └── test_environment.py
+├── pyproject.toml
+├── requirements.txt
+└── README.md
+```
+
+## Installation
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+```
+
+For development tooling:
+
+```bash
+pip install -e .[dev]
+```
+
+## Usage
+
+Run training from the command line:
+
+```bash
+cdpr-train --data ./ppo_data.xlsx --config 4-cable --episodes 100 --plot
+```
+
+### Arguments
+
+- `--data`: path to input dataset (`.csv`, `.xls`, `.xlsx`)
+- `--config`: `4-cable`, `3-cable`, or `2-cable`
+- `--episodes`: number of training episodes
+- `--plot`: display training metrics plots
+
+## Testing
+
+```bash
+pytest
+```
+
+## Important Notes
+
+- This codebase is structured for research prototyping and reproducibility.
+- The reward function now computes tension penalty from **raw (unclipped)** cable tensions, so slack cables are penalized correctly.
+- Original notebook-style script is preserved as `ppo_model_19.py` for historical reference.
+
+## Roadmap
+
+- Add true PPO optimization updates (policy/value loss over minibatches).
+- Add environment validation against experimental CDPR logs.
+- Add CI workflow (lint + tests) and model checkpointing.
+
+## License
+
+MIT (recommended for open research code). Update if your institution requires a different license.
